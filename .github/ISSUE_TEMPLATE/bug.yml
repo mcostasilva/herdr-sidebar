@@ -1,0 +1,31 @@
+name: Bug report
+description: Report a problem with forking, pane reuse, or installation.
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include what you expected and the steps to reproduce it.
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: Environment
+      description: Include OS/architecture, plugin version, herdr --version, and opencode --version.
+    validations:
+      required: true
+  - type: dropdown
+    id: connection
+    attributes:
+      label: OpenCode connection
+      options:
+        - Shared local service (default)
+        - Explicit --server
+        - Other
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant plugin log
+      description: Run herdr plugin log list --plugin opencode-sidebar --limit 5. Remove private paths or credentials before sharing.
+      render: text

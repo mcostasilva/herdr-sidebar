@@ -1,0 +1,10 @@
+name: Feature request
+description: Suggest an improvement to the sidebar workflow.
+body:
+  - type: textarea
+    id: workflow
+    attributes:
+      label: What would you like to do?
+      description: Describe the workflow and how the change would help.
+    validations:
+      required: true
