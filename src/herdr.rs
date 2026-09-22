@@ -122,13 +122,13 @@ impl Herdr<'_> {
         args.push(cwd.as_os_str().to_owned());
         args.push("--focus".into());
         for (key, value) in [
-            ("OPENCODE_SIDEBAR_SESSION", session),
+            ("HERDR_SIDEBAR_SESSION", session),
             (
-                "OPENCODE_SIDEBAR_SERVER",
+                "HERDR_SIDEBAR_SERVER",
                 connection.server.as_deref().unwrap_or(""),
             ),
             (
-                "OPENCODE_SIDEBAR_BIN",
+                "HERDR_SIDEBAR_BIN",
                 connection
                     .binary
                     .to_str()

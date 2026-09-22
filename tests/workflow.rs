@@ -64,7 +64,7 @@ impl Fixture {
     }
     fn command(&self, args: &[&str]) -> Command {
         let root = self.dir.path();
-        let mut command = Command::new(env!("CARGO_BIN_EXE_opencode-herdr-sidebar"));
+        let mut command = Command::new(env!("CARGO_BIN_EXE_herdr-sidebar"));
         command
             .args(args)
             .current_dir(root)
@@ -77,7 +77,7 @@ impl Fixture {
             .env("HERDR_PLUGIN_STATE_DIR", root.join("state"))
             .env("HERDR_BIN_PATH", root.join("herdr"))
             .env("SIDEBAR_FIXTURE", root)
-            .env("OPENCODE_SIDEBAR_TIMEOUT_MS", "800")
+            .env("HERDR_SIDEBAR_TIMEOUT_MS", "800")
             .env_remove("HERDR_PLUGIN_CONTEXT_JSON");
         command
     }
@@ -113,8 +113,9 @@ fn creates_then_focuses_from_source_and_side_without_new_forks() {
     let args = fs::read_to_string(f.dir.path().join("launch-args")).unwrap();
     assert!(args.contains("--direction\nright\n--target-pane\nw1:p1\n"));
     assert!(args.contains(f.dir.path().join("project with spaces").to_str().unwrap()));
-    assert!(args.contains("OPENCODE_SIDEBAR_SERVER=http://localhost:4096"));
-    assert!(args.contains("OPENCODE_SIDEBAR_SESSION=ses_fork"));
+    assert!(args.contains("--plugin\nherdr-sidebar\n"));
+    assert!(args.contains("HERDR_SIDEBAR_SERVER=http://localhost:4096"));
+    assert!(args.contains("HERDR_SIDEBAR_SESSION=ses_fork"));
 }
 
 #[test]
@@ -253,7 +254,7 @@ fn invocation_snapshot_wins_over_inherited_caller_id() {
 #[test]
 fn help_version_and_usage_errors_work_outside_herdr() {
     for args in [&["--help"][..], &["open", "--help"], &["--version"]] {
-        let output = Command::new(env!("CARGO_BIN_EXE_opencode-herdr-sidebar"))
+        let output = Command::new(env!("CARGO_BIN_EXE_herdr-sidebar"))
             .args(args)
             .env_remove("HERDR_ENV")
             .output()
@@ -261,7 +262,7 @@ fn help_version_and_usage_errors_work_outside_herdr() {
         assert!(output.status.success());
         assert!(!output.stdout.is_empty());
     }
-    let result = Command::new(env!("CARGO_BIN_EXE_opencode-herdr-sidebar"))
+    let result = Command::new(env!("CARGO_BIN_EXE_herdr-sidebar"))
         .arg("nonsense")
         .env_remove("HERDR_ENV")
         .output()
@@ -281,9 +282,9 @@ fn attach_executes_exact_session_and_server_arguments() {
     fs::set_permissions(&binary, fs::Permissions::from_mode(0o755)).unwrap();
     let output = f
         .command(&["attach"])
-        .env("OPENCODE_SIDEBAR_BIN", &binary)
-        .env("OPENCODE_SIDEBAR_SESSION", "ses_fork")
-        .env("OPENCODE_SIDEBAR_SERVER", "http://localhost:4096")
+        .env("HERDR_SIDEBAR_BIN", &binary)
+        .env("HERDR_SIDEBAR_SESSION", "ses_fork")
+        .env("HERDR_SIDEBAR_SERVER", "http://localhost:4096")
         .output()
         .unwrap();
     assert!(output.status.success());

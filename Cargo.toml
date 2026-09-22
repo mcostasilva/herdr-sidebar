@@ -1,11 +1,11 @@
 [package]
-name = "opencode-herdr-sidebar"
-version = "0.1.0"
+name = "herdr-sidebar"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.89"
 description = "Fork the current OpenCode session into a reusable Herdr side pane"
 license = "MIT"
-repository = "https://github.com/mcostasilva/opencode-herdr-sidebar"
+repository = "https://github.com/mcostasilva/herdr-sidebar"
 readme = "README.md"
 keywords = ["opencode", "herdr", "terminal", "cli"]
 categories = ["command-line-utilities", "development-tools"]

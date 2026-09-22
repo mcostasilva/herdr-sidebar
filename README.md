@@ -1,10 +1,10 @@
-# OpenCode Herdr Sidebar
+# Herdr Sidebar
 
-[![CI](https://github.com/mcostasilva/opencode-herdr-sidebar/actions/workflows/ci.yml/badge.svg)](https://github.com/mcostasilva/opencode-herdr-sidebar/actions/workflows/ci.yml)
+[![CI](https://github.com/mcostasilva/herdr-sidebar/actions/workflows/ci.yml/badge.svg)](https://github.com/mcostasilva/herdr-sidebar/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Rust: 1.89+](https://img.shields.io/badge/rust-1.89%2B-orange.svg)](Cargo.toml)
 
-**Branch your OpenCode conversation without losing your place.**
+**Branch your conversation without losing your place.**
 
 One shortcut forks it into a right-hand Herdr pane. Press again to return to it.
 
@@ -12,7 +12,8 @@ One shortcut forks it into a right-hand Herdr pane. Press again to return to it.
 
 *Recorded live: fork while the main agent researches Herdr, ask a side question in the fork, then return with the shortcut. Both conversations keep their own history. Research sped up and startup waits trimmed; terminal motion preserved.*
 
-A small Rust plugin for [Herdr](https://herdr.dev), built for OpenCode V2.
+A small Rust plugin for [Herdr](https://herdr.dev). Currently supports **OpenCode V2**;
+the agent-neutral name leaves room for other coding agents in the future.
 
 ## Install
 
@@ -20,10 +21,10 @@ Requires **Herdr 0.9.1+**, **OpenCode V2**, and **Rust/Cargo 1.89+** on macOS or
 Linux. Herdr's OpenCode integration must report the current session ID.
 
 ```sh
-herdr plugin install mcostasilva/opencode-herdr-sidebar
+herdr plugin install mcostasilva/herdr-sidebar
 ```
 
-Herdr builds the binary from source. To pin a release, append `--ref v0.1.0`.
+Herdr builds the binary from source. To pin a release, append `--ref v0.2.0`.
 
 Add this binding to `~/.config/herdr/config.toml`:
 
@@ -31,8 +32,8 @@ Add this binding to `~/.config/herdr/config.toml`:
 [[keys.command]]
 key = "prefix+f"
 type = "plugin_action"
-command = "opencode-sidebar.open"
-description = "fork or focus OpenCode side pane"
+command = "herdr-sidebar.open"
+description = "fork or focus side pane"
 ```
 
 ```sh
@@ -63,7 +64,7 @@ if you already use that combination.
 You can also invoke the action from Herdr:
 
 ```sh
-herdr plugin action invoke opencode-sidebar.open
+herdr plugin action invoke herdr-sidebar.open
 ```
 
 ## Compatibility
@@ -95,7 +96,7 @@ redirecting a shortcut to an unrelated terminal.
 If an action fails, inspect its log:
 
 ```sh
-herdr plugin log list --plugin opencode-sidebar --limit 5
+herdr plugin log list --plugin herdr-sidebar --limit 5
 ```
 
 **Usually, invoke the shortcut again.** A saved fork or recognizable pane is reused.
@@ -105,32 +106,65 @@ automatically.
 
 For manual recovery, run the binary from inside the source pane with
 `HERDR_PLUGIN_STATE_DIR` set to the same directory Herdr uses for this plugin
-(normally `$XDG_STATE_HOME/herdr/plugins/opencode-sidebar`, or
-`~/.local/state/herdr/plugins/opencode-sidebar`):
+(normally `$XDG_STATE_HOME/herdr/plugins/herdr-sidebar`, or
+`~/.local/state/herdr/plugins/herdr-sidebar`):
 
 ```sh
-export HERDR_PLUGIN_STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/herdr/plugins/opencode-sidebar"
+export HERDR_PLUGIN_STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/herdr/plugins/herdr-sidebar"
 
 # After finding the fork in OpenCode's session history:
-/path/to/plugin/target/release/opencode-herdr-sidebar open --recover-session ses_ID
+/path/to/plugin/target/release/herdr-sidebar open --recover-session ses_ID
 
 # After confirming a failed pane launch created no pane:
-/path/to/plugin/target/release/opencode-herdr-sidebar open --retry-launch
+/path/to/plugin/target/release/herdr-sidebar open --retry-launch
 
 # After confirming a failed fork request created no session:
-/path/to/plugin/target/release/opencode-herdr-sidebar open --retry-fork
+/path/to/plugin/target/release/herdr-sidebar open --retry-fork
 ```
 
 Let outstanding requests settle before using the explicit retry options. The plugin
 validates a recovery session's parent and directory. It never deletes conversations
-as part of recovery. For slow startup, set `OPENCODE_SIDEBAR_TIMEOUT_MS` in the
+as part of recovery. For slow startup, set `HERDR_SIDEBAR_TIMEOUT_MS` in the
 environment used to launch Herdr.
+
+## Upgrading from OpenCode Sidebar (v0.1.0)
+
+Version 0.2.0 renames the plugin ID from `opencode-sidebar` to `herdr-sidebar`.
+Let any sidebar action finish, then replace the old registration:
+
+```sh
+herdr plugin uninstall opencode-sidebar
+herdr plugin install mcostasilva/herdr-sidebar --ref v0.2.0
+```
+
+For a local development checkout, use `herdr plugin unlink opencode-sidebar`,
+rebuild, and link the checkout again instead.
+
+Change the keybinding's command to `herdr-sidebar.open`, then run
+`herdr config check` and `herdr server reload-config`.
+
+To keep existing side-pane mappings and pending recovery operations, copy the old
+`state.json` before invoking the new action for the first time. Herdr retains the
+old state directory after uninstalling. For the default state location:
+
+```sh
+state_root="${XDG_STATE_HOME:-$HOME/.local/state}/herdr/plugins"
+cp -n "$state_root/opencode-sidebar/state.json" "$state_root/herdr-sidebar/state.json"
+```
+
+Only this file needs copying, and only if it exists; use your actual plugin state
+directories if customized. The state format is unchanged. Existing side panes can
+stay open. The old `OPENCODE_SIDEBAR_TIMEOUT_MS` setting remains a fallback when
+`HERDR_SIDEBAR_TIMEOUT_MS` is unset.
+
+The original `v0.1.0` tag retains its original plugin ID and binary name. Use
+`v0.2.0` or later for Herdr Sidebar.
 
 ## Development
 
 ```sh
-git clone https://github.com/mcostasilva/opencode-herdr-sidebar.git
-cd opencode-herdr-sidebar
+git clone https://github.com/mcostasilva/herdr-sidebar.git
+cd herdr-sidebar
 cargo build --release --locked --target-dir target
 herdr plugin link "$PWD"
 ```
@@ -143,10 +177,10 @@ The automated tests use isolated fixtures and do not require live agents.
 Remove the keybinding, reload Herdr's configuration, and run:
 
 ```sh
-herdr plugin uninstall opencode-sidebar
+herdr plugin uninstall herdr-sidebar
 ```
 
-For a local development checkout, use `herdr plugin unlink opencode-sidebar`.
+For a local development checkout, use `herdr plugin unlink herdr-sidebar`.
 
 ## License
 

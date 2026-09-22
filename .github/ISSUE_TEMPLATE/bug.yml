@@ -27,5 +27,5 @@ body:
     id: logs
     attributes:
       label: Relevant plugin log
-      description: Run herdr plugin log list --plugin opencode-sidebar --limit 5. Remove private paths or credentials before sharing.
+      description: Run herdr plugin log list --plugin herdr-sidebar --limit 5. Remove private paths or credentials before sharing.
       render: text

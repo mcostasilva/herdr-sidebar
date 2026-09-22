@@ -6,8 +6,8 @@ Install a stable Rust toolchain. The minimum supported Rust version is **1.89**.
 Python 3.11+ is used only for the release-metadata check.
 
 ```sh
-git clone https://github.com/mcostasilva/opencode-herdr-sidebar.git
-cd opencode-herdr-sidebar
+git clone https://github.com/mcostasilva/herdr-sidebar.git
+cd herdr-sidebar
 cargo build --release --locked --target-dir target
 ```
 
@@ -52,8 +52,8 @@ and do not automatically repeat an operation whose outcome is unknown.
 
 ```sh
 herdr plugin link "$PWD"
-herdr plugin action invoke opencode-sidebar.open
-herdr plugin log list --plugin opencode-sidebar --limit 5
+herdr plugin action invoke herdr-sidebar.open
+herdr plugin log list --plugin herdr-sidebar --limit 5
 ```
 
 Invoke the action with the intended source pane focused. Rebuild after changes;

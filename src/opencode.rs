@@ -166,11 +166,11 @@ impl Connection {
 }
 
 pub fn attach() -> Result<()> {
-    let session = env::var("OPENCODE_SIDEBAR_SESSION").context("missing fork session ID")?;
+    let session = env::var("HERDR_SIDEBAR_SESSION").context("missing fork session ID")?;
     validate_id(&session)?;
-    let binary = env::var_os("OPENCODE_SIDEBAR_BIN").context("missing OpenCode executable")?;
+    let binary = env::var_os("HERDR_SIDEBAR_BIN").context("missing OpenCode executable")?;
     let mut command = Command::new(binary);
-    if let Ok(server) = env::var("OPENCODE_SIDEBAR_SERVER")
+    if let Ok(server) = env::var("HERDR_SIDEBAR_SERVER")
         && !server.is_empty()
     {
         command.args(["--server", &server]);

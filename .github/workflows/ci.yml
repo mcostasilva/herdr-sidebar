@@ -26,7 +26,7 @@ jobs:
         env:
           CARGO_TARGET_DIR: target/custom
         run: cargo build --release --locked --target-dir target
-      - run: target/release/opencode-herdr-sidebar --version
+      - run: target/release/herdr-sidebar --version
       - run: python3 scripts/check-release.py
 
   lint:

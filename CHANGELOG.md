@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0
+
+- Rename the project, repository, Rust binary, and plugin ID to `herdr-sidebar`.
+- Rename the action to `herdr-sidebar.open` and use agent-neutral plugin and pane titles.
+- Use the `HERDR_SIDEBAR_*` environment prefix; keep `OPENCODE_SIDEBAR_TIMEOUT_MS` as a fallback for existing configurations.
+- Document migration from `opencode-sidebar`, including preserving saved pane mappings.
+- OpenCode V2 remains the currently supported agent.
+
 ## 0.1.0
 
 - Fork the current OpenCode V2 conversation into a right-hand Herdr split.

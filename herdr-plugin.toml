@@ -1,6 +1,6 @@
-id = "opencode-sidebar"
-name = "OpenCode Sidebar"
-version = "0.1.0"
+id = "herdr-sidebar"
+name = "Herdr Sidebar"
+version = "0.2.0"
 min_herdr_version = "0.9.1"
 description = "Fork the current OpenCode conversation to the right, or focus its existing side pane"
 platforms = ["macos", "linux"]
@@ -10,12 +10,12 @@ command = ["cargo", "build", "--release", "--locked", "--target-dir", "target"]
 
 [[actions]]
 id = "open"
-title = "OpenCode: fork or focus side pane"
+title = "Sidebar: fork or focus side pane"
 contexts = ["pane"]
-command = ["target/release/opencode-herdr-sidebar", "open"]
+command = ["target/release/herdr-sidebar", "open"]
 
 [[panes]]
 id = "session"
-title = "OpenCode side session"
+title = "Side session"
 placement = "split"
-command = ["sh", "-c", 'exec "$HERDR_PLUGIN_ROOT/target/release/opencode-herdr-sidebar" attach']
+command = ["sh", "-c", 'exec "$HERDR_PLUGIN_ROOT/target/release/herdr-sidebar" attach']

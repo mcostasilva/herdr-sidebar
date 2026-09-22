@@ -10,7 +10,7 @@ use anyhow::{Context, Result, bail, ensure};
 use serde::Deserialize;
 use std::{env, ffi::OsString, path::PathBuf, process::ExitCode, time::Duration};
 
-const PLUGIN: &str = "opencode-sidebar";
+const PLUGIN: &str = "herdr-sidebar";
 
 /// Configuration is captured once; workflow code never changes global environment.
 struct Config {
@@ -97,10 +97,13 @@ impl Config {
         } else {
             env::var("HERDR_PANE_ID").context("missing source pane; use --pane PANE_ID")?
         };
-        let timeout = match env::var("OPENCODE_SIDEBAR_TIMEOUT_MS") {
+        let timeout = match env::var("HERDR_SIDEBAR_TIMEOUT_MS").or_else(|error| match error {
+            env::VarError::NotPresent => env::var("OPENCODE_SIDEBAR_TIMEOUT_MS"),
+            error => Err(error),
+        }) {
             Ok(value) => value
                 .parse::<u64>()
-                .context("invalid OPENCODE_SIDEBAR_TIMEOUT_MS")?,
+                .context("invalid sidebar timeout (HERDR_SIDEBAR_TIMEOUT_MS or legacy OPENCODE_SIDEBAR_TIMEOUT_MS)")?,
             Err(env::VarError::NotPresent) => 30_000,
             Err(error) => return Err(error.into()),
         };
@@ -120,17 +123,17 @@ impl Config {
 fn run(cli: Cli) -> Result<()> {
     match cli {
         Cli::Help => println!(
-            "OpenCode Herdr Sidebar\n\n\
-            Usage: opencode-herdr-sidebar open [OPTIONS]\n\n\
+            "Herdr Sidebar\n\n\
+            Usage: herdr-sidebar open [OPTIONS]\n\n\
             Fork the current conversation into a right-hand pane, or focus its existing fork.\n\n\
             Options:\n  --pane PANE_ID           Override the originating pane\n  \
             --recover-session ID     Recover an interrupted fork using its known session ID\n  \
             --retry-launch           Retry a launch whose outcome could not be determined\n  \
             --retry-fork             Retry after verifying no fork was created\n  \
             -h, --help               Show help\n  -V, --version            Show version\n\n\
-            Herdr action: opencode-sidebar.open"
+            Herdr action: herdr-sidebar.open"
         ),
-        Cli::Version => println!("opencode-herdr-sidebar {}", env!("CARGO_PKG_VERSION")),
+        Cli::Version => println!("herdr-sidebar {}", env!("CARGO_PKG_VERSION")),
         Cli::Attach => {
             ensure!(
                 env::var("HERDR_ENV").as_deref() == Ok("1"),
@@ -157,14 +160,14 @@ fn main() -> ExitCode {
     let cli = match parse(env::args_os().skip(1)) {
         Ok(cli) => cli,
         Err(error) => {
-            eprintln!("OpenCode Sidebar: {error:#}");
+            eprintln!("Herdr Sidebar: {error:#}");
             return ExitCode::from(2);
         }
     };
     match run(cli) {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
-            eprintln!("OpenCode Sidebar: {error:#}");
+            eprintln!("Herdr Sidebar: {error:#}");
             ExitCode::FAILURE
         }
     }

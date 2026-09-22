@@ -12,7 +12,10 @@ plugin = tomllib.loads((root / "herdr-plugin.toml").read_text())
 assert package["version"] == plugin["version"], "Cargo and Herdr versions differ"
 assert package["license"] == "MIT", "Expected MIT license metadata"
 assert (root / "LICENSE").is_file(), "Missing license file"
-assert package["repository"] == "https://github.com/mcostasilva/opencode-herdr-sidebar"
+assert package["name"] == plugin["id"] == "herdr-sidebar", (
+    "Cargo and Herdr names differ"
+)
+assert package["repository"] == "https://github.com/mcostasilva/herdr-sidebar"
 assert set(plugin["platforms"]) == {"macos", "linux"}
 
 if os.environ.get("GITHUB_REF_TYPE") == "tag":
