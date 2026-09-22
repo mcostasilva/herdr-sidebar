@@ -10,7 +10,7 @@ One shortcut forks it into a right-hand Herdr pane. Press again to return to it.
 
 ![An agent researches Herdr while its conversation is forked into a right-hand pane. The sidebar answers a separate question as the main session finishes its research.](docs/demo.gif)
 
-*Recorded live: fork while the main agent researches Herdr, ask a side question in the fork, then return with the shortcut. Both conversations keep their own history. Waiting and streaming condensed.*
+*Recorded live: fork while the main agent researches Herdr, ask a side question in the fork, then return with the shortcut. Both conversations keep their own history. Research sped up and startup waits trimmed; terminal motion preserved.*
 
 A small Rust plugin for [Herdr](https://herdr.dev), built for OpenCode V2.
 
