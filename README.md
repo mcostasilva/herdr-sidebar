@@ -127,39 +127,6 @@ validates a recovery session's parent and directory. It never deletes conversati
 as part of recovery. For slow startup, set `HERDR_SIDEBAR_TIMEOUT_MS` in the
 environment used to launch Herdr.
 
-## Upgrading from OpenCode Sidebar (v0.1.0)
-
-Version 0.2.0 renames the plugin ID from `opencode-sidebar` to `herdr-sidebar`.
-Let any sidebar action finish, then replace the old registration:
-
-```sh
-herdr plugin uninstall opencode-sidebar
-herdr plugin install mcostasilva/herdr-sidebar --ref v0.2.0
-```
-
-For a local development checkout, use `herdr plugin unlink opencode-sidebar`,
-rebuild, and link the checkout again instead.
-
-Change the keybinding's command to `herdr-sidebar.open`, then run
-`herdr config check` and `herdr server reload-config`.
-
-To keep existing side-pane mappings and pending recovery operations, copy the old
-`state.json` before invoking the new action for the first time. Herdr retains the
-old state directory after uninstalling. For the default state location:
-
-```sh
-state_root="${XDG_STATE_HOME:-$HOME/.local/state}/herdr/plugins"
-cp -n "$state_root/opencode-sidebar/state.json" "$state_root/herdr-sidebar/state.json"
-```
-
-Only this file needs copying, and only if it exists; use your actual plugin state
-directories if customized. The state format is unchanged. Existing side panes can
-stay open. The old `OPENCODE_SIDEBAR_TIMEOUT_MS` setting remains a fallback when
-`HERDR_SIDEBAR_TIMEOUT_MS` is unset.
-
-The original `v0.1.0` tag retains its original plugin ID and binary name. Use
-`v0.2.0` or later for Herdr Sidebar.
-
 ## Development
 
 ```sh
